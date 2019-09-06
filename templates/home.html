@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+
+<style type="text/css">
+	*:focus{outline:none;}
+	img
+	{
+		height: 25vh;
+		width: 8vw;
+	}
+	body{background-image: url(static/images/backg.jpg);  }
+	.cardshere
+	{
+		    height: 137px;
+            width: 70px;
+            transform: scale(1.0);
+	}
+	.cardshere:hover
+	{
+            transform: scale(1.1);
+	}
+	.butgame{height:52px;width:181px;background-color:#ff8344;border-color:#34cb4a;border-radius:100px;border-width:3px;border-Style:outset;box-shadow:2px 2px 2px 2px #000000;background-image:linear-gradient(#008000 , #80ff00);font-size:26px;text-align:center;font-family:Times New Roman;}
+.butgame:hover{height:52px;width:181px;background-color:#ff8344;border-color:#34cb4a;border-radius:100px;border-width:3px;border-Style:outset;box-shadow:2px 2px 2px 2px #000000;background-image:linear-gradient(#00ff00 , #008000);font-size:26px;text-align:center;font-family:Times New Roman;}
+ #miantable
+ {
+ 	width: 1142px;
+    height: 413px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 250px;
+    border: 2px solid;
+    box-shadow: 4px 5px 50px deepskyblue;
+    background-color: black;
+ }
+ #gamveoverdiv{
+ 	height: 119vh;
+    width: 127vw;
+    background-color: #ff00008c;
+    position: fixed;
+    z-index: 10;
+    margin-left: -10vw;
+    margin-top: -10px;
+    display: none;
+ }
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	function reload()
+{
+   document.getElementById('bet').innerHTML=parseInt(localStorage.getItem("bet"));
+}
+
+</script>
+
+<body>
+<div id="loder">
+
+</div>
+<div id="gamveoverdiv">
+	<center>
+	<input type="button" value="newgame" onclick="newgame()" name="" class="butgame" style="margin-top: 100px; opacity: 1;">
+
+		<div id="whowin" style="height: 300px; width: 300px;    font-size: 65px; ">
+			
+		</div>
+	</center>
+</div>
+<div id="minegame">
+	<div style="margin-left: 300px;">
+	<button onclick="winshow()" class="butgame"> DEAL </button>
+    <button onclick="location.reload();" class="butgame"> Shuffel </button>
+	<input type="button" value="newgame" onclick="newgame()" name="" class="butgame">
+    </div>
+	<br><br>
+    <div style="background-image: url('static/images/table.png'); background-size: cover; background-repeat: no-repeat;" id="miantable">
+	
+ <br><br><br>
+  <div style="position: absolute; margin-left: 200px; margin-top: 10px;" id="cardshow">
+	{%for i in range(0, 5)%} 
+	<img class="cardshere" src="static/images/{{ name[i] }}.png">
+    {%endfor%} 
+    <br>
+    <div id="cpu">
+    {%for i in range(5, 10)%} 
+	<img class="cardshere" src="static/images/cover.png">
+    {%endfor%} 
+    </div>
+
+    
+  </div>
+
+   <div style="width: 50vw;margin-left: 600px;" id="main" >
+	<img src="static/images/pok1.png" id="pok0" style="height: 50px; width: 50px;" onclick="chash(0,1)">
+	<img src="static/images/pok10.png" id="pok1" style="height: 50px; width: 50px;" onclick="chash(1,10)">
+	<img src="static/images/pok20.png" id="pok2" style="height: 50px; width: 50px;" onclick="chash(2,20)">
+	<img src="static/images/pok50.png" id="pok3" style="height: 50px; width: 50px;" onclick="chash(3,50)">
+	<img src="static/images/pok100.png" id="pok4" style="height: 50px; width: 50px;" onclick="chash(4,100)">
+	<br>
+	<div>
+		bet:<span id="bet"></span>
+	</div>
+	<div>
+		amount:<span id="amntis"></span>
+	</div>
+	<p>----------------------------------</p>
+	<div>
+		bet:<span id="cpubet"></span>
+	</div>
+	<div>
+		amount:<span id="cpuamt"></span>
+	</div>
+    <p id="demo" style="color: black;"></p>
+
+  </div>
+  <script type="text/javascript">
+	if(localStorage.getItem("winamount")!=null)
+       document.getElementById('amntis').innerHTML=parseInt(localStorage.getItem("winamount"));
+    else
+    	document.getElementById('amntis').innerHTML=0;
+    if(localStorage.getItem("cpuamount")!=null)
+       document.getElementById('cpuamt').innerHTML=parseInt(localStorage.getItem("cpuamount"));
+    else
+    	document.getElementById('cpuamt').innerHTML=0;
+    
+    arr=[0,0,0,0,0];
+    ch=0;
+    newar=localStorage.getItem("array");
+
+    var res =newar.split(",");
+    for(var i=0;i<5;i++)
+    {
+    	res[i]=parseInt(res[i]);
+    	if(res[i]==10)
+    	{
+  		  document.getElementById('pok'+i).style.display="none";
+    	}
+    }
+    arr=res;
+    
+    if(arr==null)
+    {
+    	arr=[0,0,0,0,0];
+    }
+    ch=parseInt(ch);
+	
+  function chash(t,n)
+  {
+
+  	if(ch<=1810)
+  	{
+  	 ch=ch+n;
+  	 console.log(ch);
+  	 document.getElementById('bet').innerHTML=ch;
+  	 document.getElementById('cpubet').innerHTML=ch;
+
+  	}
+  	arr[t]=arr[t]+1;
+  	localStorage.setItem("array",arr)
+  	if(arr[t]>=10)
+  	{
+  		document.getElementById('pok'+t).style.display="none";
+    }
+  } 
+	winamt=0;
+
+	function winshow()
+ {
+	document.getElementById('cpu').innerHTML="{%for i in range(5, 10)%}<img src='static/images/{{ name[i] }}.png' class='cardshere'> {%endfor%}";
+	var a={{ res1[1] }} ;
+	var b={{ res2[1] }} ;
+	console.log(a,b);
+	//min win
+	var num='';
+	if(a>b)
+	{
+	   num="YOU win";
+	   if(localStorage.getItem("winamount")!=null)
+       winamt=parseInt(localStorage.getItem("winamount"));
+  	   localStorage.setItem("winamount",winamt+ch)
+  	   document.getElementById('amntis').innerHTML=winamt+ch;
+       console.log(winamt+ch);
+	}
+	else if(a<b)
+	{
+		num="CPU win";
+	   if(localStorage.getItem("cpuamount")!=null)
+       {winamt=parseInt(localStorage.getItem("cpuamount"));}
+  	   localStorage.setItem("cpuamount",winamt+ch)
+  	   document.getElementById('cpuamt').innerHTML=winamt+ch;
+	}
+	else if(a==b)
+	{num="tie";}
+
+		
+	console.log(a,b);
+	console.log(num);
+    document.getElementById("demo").innerHTML = "<h3>YOU :{{res1[0]}}</h3><h3>CPU :{{ res2[0]}}</h3>"+num;
+  }
+  if(arr[0]==10&&arr[1]==10&&arr[2]==10&&arr[3]==10&&arr[4]==10)
+    {
+    	winshow();
+    	var a=document.getElementById('amntis').innerHTML;
+    	var b=document.getElementById('cpuamt').innerHTML;
+        a=parseInt(a);
+        b=parseInt(b);
+    	if(a>b)
+    	{
+    		winner="YOU WIN";
+    	}
+    	else
+    	{
+    		winner="CPU WIN";
+    	}
+    	document.getElementById("whowin").innerHTML=""+winner;
+    	document.getElementById("gamveoverdiv").style.display="block";
+    }
+
+
+  </script>
+    </div>
+</div>
+
+<script type="text/javascript">
+	function newgame()
+	{
+		ar=[0,0,0,0,0];
+  	   localStorage.setItem("winamount",0);
+  	   localStorage.setItem("array",ar);
+  	   localStorage.setItem("cpuamount",0);
+  	   location.reload();
+
+	}
+</script>
+
+</body>
+</html>
